@@ -1,37 +1,28 @@
-'use strict';
+const Sequelize = require("sequelize");
+const env = process.env.NODE_ENV || "development";
+const config = require("../config/config.js")[env];
+const User = require("./user");
+const Mood = require("./mood");
+const Betting = require("./betting");
+const Archive = require("./archive");
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
-
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.User = User;
+db.Mood = Mood;
+db.Betting = Betting;
+db.Archive = Archive;
+
+User.init(sequelize);
+Mood.init(sequelize);
+Betting.init(sequelize);
+Archive.init(sequelize);
+
+User.associate(db);
+Mood.associate(db);
+Betting.associate(db);
+Archive.associate(db);
 
 module.exports = db;
