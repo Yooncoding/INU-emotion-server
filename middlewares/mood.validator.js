@@ -3,7 +3,7 @@ const Sequelize = require("sequelize");
 const Mood = require("../models/mood");
 
 module.exports = {
-  isSubmitedByToday: async (req, res, next) => {
+  isSubmitedToday: async (req, res, next) => {
     const Op = Sequelize.Op;
     const TODAY_START = new Date().setHours(0, 0, 0, 0);
     const NOW = new Date();

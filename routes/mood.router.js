@@ -1,20 +1,19 @@
 const express = require("express");
 const Sequelize = require("sequelize");
 const { isLoggIned } = require("../middlewares/auth.middleware");
-const { isSubmitedByToday } = require("../middlewares/mood.validator");
+const { isSubmitedToday } = require("../middlewares/mood.validator");
 const elements = require("../utils/elements");
 const Mood = require("../models/mood");
-const { sort } = require("../utils/elements");
 
 const router = express.Router();
 
 router.use(isLoggIned);
 /**
  * @description 오늘 온도 제출하기
- * @route POST /mood/submit
+ * @route POST /mood
  * @TODO 토큰의 user.id를 UserId에 넣고 UserId가 존재하면 이미 제출했다는 vaildator만들기
  */
-router.post("/submit", isSubmitedByToday, async (req, res, next) => {
+router.post("/", isSubmitedToday, async (req, res, next) => {
   // req.body.element_first, second, third는 utils/elements.js에 있는 요소들이랑 이름을 맞춰 줘야함
   const { select_mood, element_first, element_second, element_third } = req.body;
   const { id } = req.user;
