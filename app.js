@@ -24,7 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // 라우터 세팅
 const authRouter = require("./routes/auth.router");
+const moodRouter = require("./routes/mood.router");
 app.use("/auth", authRouter);
+app.use("/mood", moodRouter);
 
 app.use((req, res, next) => {
   const error = new Error("접속 페이지 없음");

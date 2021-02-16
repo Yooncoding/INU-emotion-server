@@ -1,4 +1,3 @@
-const { HasMany, BelongsTo } = require("sequelize");
 const Sequelize = require("sequelize");
 
 module.exports = class Mood extends Sequelize.Model {
