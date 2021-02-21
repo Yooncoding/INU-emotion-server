@@ -46,6 +46,11 @@ router.get("/", async (req, res, next) => {
   const Op = Sequelize.Op;
   const TODAY_START = new Date().setHours(0, 0, 0, 0);
   const NOW = new Date();
+  let max = 0;
+  let maxString1 = []; // 첫 번째로 큰 value값을 지닌 key값들의 집합
+  let maxString2 = []; // 두 번째로 큰 value값을 지닌 key값들의 집합
+  let maxString3 = []; // 세 번째로 큰 value값을 지닌 key값들의 집합
+  let E_rank = [];
   try {
     const todayMoodSum = await Mood.sum("select_mood", {
       where: {
@@ -65,12 +70,10 @@ router.get("/", async (req, res, next) => {
     });
     const todayMoodAvg = parseInt(todayMoodSum / todayMood.length);
     const elementGroup = [];
-    if (!todayMood) {
+    if (todayMood.length === 0) {
       result = { success: false, message: "아직 오늘 제출된 온도가 없습니다." };
     } else {
       // TODO: 여기에 요소 순위 기능 추가할 것
-      console.log(elements);
-      console.log(todayMood[0].element_first);
       for (let i = 0; i < todayMood.length; i++) {
         for (let j = 0; j < elements.length; j++) {
           if (elements[j] === todayMood[i].element_first) {
@@ -83,20 +86,53 @@ router.get("/", async (req, res, next) => {
         }
       }
 
-      console.log(elementGroup);
       const elementCount = elementGroup.reduce((a, c) => {
         a[c] = (a[c] || 0) + 1;
         return a;
       }, {});
-      console.log(elementCount);
 
-      let elementRanking = [];
-      for (let number in elementCount) {
-        elementRanking.push([number, elementCount[number]]);
+      // 객체 내에서 가장 큰 값을 지닌 value값을 찾음
+      for (let string in elementCount) {
+        if (max < elementCount[string]) {
+          max = elementCount[string];
+        }
       }
-      elementRanking.sort((a, b) => b[1] - a[1]);
+      // 위에서 찾아낸 value값을 가지는 객체의 key값을 push해주면서 최대값을 가지는 객체의 원소 일부를 삭제
+      for (let string in elementCount) {
+        if (max === elementCount[string]) {
+          maxString1.push(string);
+          delete elementCount[string];
+        }
+      }
+      // 2번째 큰수
+      max = 0;
+      for (let string in elementCount) {
+        if (max < elementCount[string]) {
+          max = elementCount[string];
+        }
+      }
+      for (let string in elementCount) {
+        if (max === elementCount[string]) {
+          maxString2.push(string);
+          delete elementCount[string];
+        }
+      }
+      // 3번째 큰수
+      max = 0;
+      for (let string in elementCount) {
+        if (max < elementCount[string]) {
+          max = elementCount[string];
+        }
+      }
+      for (let string in elementCount) {
+        if (max === elementCount[string]) {
+          maxString3.push(string);
+          delete elementCount[string];
+        }
+      }
+      E_rank.push(maxString1, maxString2, maxString3);
 
-      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, elementRanking };
+      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, E_rank };
     }
   } catch (error) {
     console.error(error);
