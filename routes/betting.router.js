@@ -2,6 +2,7 @@ const express = require("express");
 const { isLoggIned } = require("../middlewares/auth.middleware");
 const { isBettedToday, isBettingTime } = require("../middlewares/betting.validator");
 const Betting = require("../models/betting");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -22,6 +23,32 @@ router.post("/", isBettedToday, async (req, res, next) => {
       UserId: id,
     });
     result = { success: true, message: "베팅 완료" };
+  } catch (error) {
+    console.error(error);
+    next(error);
+  } finally {
+    if (!result.success) res.status(403).json(result);
+    else res.status(201).json(result);
+  }
+});
+
+/**
+ * @description 월간 랭킹 보기
+ * @route GET /betting
+ * @TODO
+ */
+router.get("/", async (req, res, next) => {
+  let result;
+  let P_rank = [];
+  try {
+    const ranking = await User.findAll({
+      attributes: ["nick", "point"],
+      order: [["point", "DESC"]],
+    });
+    for (let i = 0; i < 6; i++) {
+      P_rank.push(ranking[i].dataValues);
+    }
+    result = { success: true, message: "월간 포인트 랭킹", P_rank };
   } catch (error) {
     console.error(error);
     next(error);
