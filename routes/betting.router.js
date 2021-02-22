@@ -39,22 +39,26 @@ router.post("/", isBettedToday, async (req, res, next) => {
  */
 router.get("/", async (req, res, next) => {
   let result;
-  let P_rank = [];
+  const monthRanking = [];
+  const allRanking = [];
+  const myPoint = [];
   const { nick } = req.user;
   try {
     const ranking = await User.findAll({
       attributes: ["nick", "point"],
       order: [["point", "DESC"]],
     });
-    console.log(ranking);
-    console.log(req.user);
-    for (let i = 0; i < 6; i++) {
-      P_rank.push(ranking[i].dataValues);
+    for (let i = 0; i < ranking.length; i++) {
+      allRanking.push(ranking[i].dataValues);
       if (ranking[i].dataValues.nick === nick) {
-        myPoint = ranking[i].dataValues.point;
+        myPoint.push({ rank: i + 1, point: ranking[i].dataValues.point });
       }
     }
-    result = { success: true, message: "월간 포인트 랭킹", P_rank, myPoint };
+    // TODO: 월간 랭킹 순위는 몇 위 까지 보여줄것 인지 정하기 (임시: 6명)
+    for (let i = 0; i < 6; i++) {
+      monthRanking.push(allRanking[i]);
+    }
+    result = { success: true, message: "월간 포인트 랭킹", monthRanking, myPoint };
   } catch (error) {
     console.error(error);
     next(error);
