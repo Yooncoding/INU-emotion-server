@@ -40,15 +40,21 @@ router.post("/", isBettedToday, async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   let result;
   let P_rank = [];
+  const { nick } = req.user;
   try {
     const ranking = await User.findAll({
       attributes: ["nick", "point"],
       order: [["point", "DESC"]],
     });
+    console.log(ranking);
+    console.log(req.user);
     for (let i = 0; i < 6; i++) {
       P_rank.push(ranking[i].dataValues);
+      if (ranking[i].dataValues.nick === nick) {
+        myPoint = ranking[i].dataValues.point;
+      }
     }
-    result = { success: true, message: "월간 포인트 랭킹", P_rank };
+    result = { success: true, message: "월간 포인트 랭킹", P_rank, myPoint };
   } catch (error) {
     console.error(error);
     next(error);
