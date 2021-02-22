@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const resetPoint = require("./utils/resetPoint");
 const givePoint = require("./utils/givePoint");
+const saveTodayMood = require("./utils/saveTodayMood");
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use("/betting", bettingRouter);
 
 resetPoint;
 givePoint;
+saveTodayMood;
 
 app.use((req, res, next) => {
   const error = new Error("접속 페이지 없음");
