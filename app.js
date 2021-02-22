@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const resetPoint = require("./utils/resetPoint");
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ const bettingRouter = require("./routes/betting.router");
 app.use("/auth", authRouter);
 app.use("/mood", moodRouter);
 app.use("/betting", bettingRouter);
+
+resetPoint;
 
 app.use((req, res, next) => {
   const error = new Error("접속 페이지 없음");
