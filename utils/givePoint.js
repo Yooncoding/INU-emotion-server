@@ -4,7 +4,8 @@ const Betting = require("../models/betting");
 const User = require("../models/user");
 const Mood = require("../models/mood");
 
-const givePoint = schedule.scheduleJob("00 00 23 * * *", async () => {
+// 하루가 지나기전(매일 23시 05분)에 베팅점수 비교 후 점수 지급
+const givePoint = schedule.scheduleJob("00 05 23 * * *", async () => {
   const Op = Sequelize.Op;
   const TODAY_START = new Date().setHours(0, 0, 0, 0);
   const NOW = new Date();
@@ -55,7 +56,6 @@ const givePoint = schedule.scheduleJob("00 00 23 * * *", async () => {
         },
       }
     );
-    console.log(point);
   }
 
   // 2등 포인트 지급

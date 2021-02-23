@@ -1,7 +1,7 @@
 const express = require("express");
 const Sequelize = require("sequelize");
 const { isLoggIned } = require("../middlewares/auth.middleware");
-const { isSubmitedToday } = require("../middlewares/mood.validator");
+const { isSubmitedToday, isSubmitTime } = require("../middlewares/mood.middleware");
 const elements = require("../utils/elements");
 const Mood = require("../models/mood");
 
@@ -11,7 +11,7 @@ router.use(isLoggIned);
 /**
  * @description 오늘 온도 제출하기
  * @route POST /mood
- * @TODO 토큰의 user.id를 UserId에 넣고 UserId가 존재하면 이미 제출했다는 vaildator만들기
+ * @TODO test가 끝나고나서 isSubnitTime(제출가능 시간인지 확인해주는 미들웨어) 넣기
  */
 router.post("/", isSubmitedToday, async (req, res, next) => {
   // req.body.element_first, second, third는 utils/elements.js에 있는 요소들이랑 이름을 맞춰 줘야함

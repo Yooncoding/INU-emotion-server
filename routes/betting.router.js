@@ -1,6 +1,6 @@
 const express = require("express");
 const { isLoggIned } = require("../middlewares/auth.middleware");
-const { isBettedToday, isBettingTime } = require("../middlewares/betting.validator");
+const { isBettedToday, isBettingTime } = require("../middlewares/betting.middleware");
 const Betting = require("../models/betting");
 const User = require("../models/user");
 
@@ -11,7 +11,7 @@ router.use(isLoggIned);
 /**
  * @description 오늘 온도 맞추기 베팅하기
  * @route POST /betting
- * @TODO isBettingTime 구현 해놓은거 마지막에 넣기
+ * @TODO test가 끝나고나서 isBettingTime(베팅가능 시간인지 확인해주는 미들웨어) 넣기
  */
 router.post("/", isBettedToday, async (req, res, next) => {
   const { bet_mood } = req.body;

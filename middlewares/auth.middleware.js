@@ -5,6 +5,7 @@ const request = require("request");
 dotenv.config();
 
 module.exports = {
+  // 로그인 상태 확인 미들웨어 -> 로그인이 되어있어야지만 이용할 수 있는 서비스앞에 배치
   isLoggIned: (req, res, next) => {
     const bearerToken = req.headers.authorization;
     if (!bearerToken) {
@@ -17,6 +18,7 @@ module.exports = {
       } else res.status(401).json({ success: false, message: "다시 로그인이 필요합니다." });
     }
   },
+  // 학교 포탈사이트 로그인 인증 미들웨어 -> 회원가입 라우터로 넘어감
   isAuthenticated: (req, res, next) => {
     const { email, password } = req.body;
     let data = `log=${email}&pwd=${password}`;

@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const Betting = require("../models/betting");
 
 module.exports = {
+  // 오늘 베팅을 했는지 확인하는 미들웨어
   isBettedToday: async (req, res, next) => {
     const Op = Sequelize.Op;
     const TODAY_START = new Date().setHours(0, 0, 0, 0);
@@ -21,6 +22,7 @@ module.exports = {
       res.status(403).json({ success: false, message: "이미 오늘 베팅을 하셨습니다." });
     }
   },
+  // 베팅 가능한 시간(08시 ~ 20시)인지 확인 하는 미들웨어
   isBettingTime: async (req, res, next) => {
     const NOW = new Date();
     const HOUR = NOW.getHours();

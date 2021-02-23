@@ -11,7 +11,7 @@ dotenv.config();
 /**
  * @description 회원가입
  * @route POST /auth/register
- * @TODO 로그인 안되어 있는상태에서 회원가입가능, 이메일은 숫자 9자리만 받을 수 있음
+ * @TODO 로그인 안되어 있는상태에서 회원가입가능 미들웨어, 이메일은 숫자 9자리만 받을 수 있음 확인
  */
 router.post("/register", isAuthenticated, async (req, res, next) => {
   const { email, nick, password } = req.body;
@@ -46,14 +46,14 @@ router.post("/register", isAuthenticated, async (req, res, next) => {
 /**
  * @description 로그인
  * @route POST /auth/login
- * @TODO 회원가입 방법 결정되면 vaildator만들기
+ * @TODO 학번과 비밀번호 로그인을 입력하라는 문구가 있으면 좋을 것 같음
  */
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   let result;
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) result = { success: false, message: "존재하지 않는 이메일 입니다." };
+    if (!user) result = { success: false, message: "아직 가입하지 않은 회원입니다." };
     else {
       if (await bcrypt.compare(password, user.password)) {
         const token = jwt.sign({ id: user.id, nick: user.nick }, process.env.JWT_SECRET);

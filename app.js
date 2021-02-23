@@ -29,10 +29,13 @@ app.use(express.urlencoded({ extended: true }));
 const authRouter = require("./routes/auth.router");
 const moodRouter = require("./routes/mood.router");
 const bettingRouter = require("./routes/betting.router");
+const archiveRouter = require("./routes/archive.router");
 app.use("/auth", authRouter);
 app.use("/mood", moodRouter);
 app.use("/betting", bettingRouter);
+app.use("/archive", archiveRouter);
 
+// scheduleJob 기능
 resetPoint;
 givePoint;
 saveTodayMood;
