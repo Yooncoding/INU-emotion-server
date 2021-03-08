@@ -10,6 +10,7 @@ const router = express.Router();
  * @TODO 어떤 형식으로 보내줄지 회의 후 결정
  */
 router.get("/", async (req, res, next) => {
+  let result;
   const NOW = new Date();
   const Op = Sequelize.Op;
   const MONTH_START = new Date().setDate(0);

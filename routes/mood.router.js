@@ -132,7 +132,7 @@ router.get("/", async (req, res, next) => {
       }
       E_rank.push(maxString1, maxString2, maxString3);
 
-      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, E_rank };
+      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, elementRanking: E_rank };
     }
   } catch (error) {
     console.error(error);

@@ -1,11 +1,10 @@
 require("date-utils");
 const Sequelize = require("sequelize");
 const Betting = require("../models/betting");
-
+const Op = Sequelize.Op;
 module.exports = {
   // 오늘 베팅을 했는지 확인하는 미들웨어
   isBettedToday: async (req, res, next) => {
-    const Op = Sequelize.Op;
     const TODAY_START = new Date().setHours(0, 0, 0, 0);
     const NOW = new Date();
     const existUser = await Betting.findOne({
