@@ -50,7 +50,6 @@ router.get("/", async (req, res, next) => {
   let maxString1 = []; // 첫 번째로 큰 value값을 지닌 key값들의 집합
   let maxString2 = []; // 두 번째로 큰 value값을 지닌 key값들의 집합
   let maxString3 = []; // 세 번째로 큰 value값을 지닌 key값들의 집합
-  let E_rank = [];
   try {
     const todayMoodSum = await Mood.sum("select_mood", {
       where: {
@@ -90,7 +89,6 @@ router.get("/", async (req, res, next) => {
         a[c] = (a[c] || 0) + 1;
         return a;
       }, {});
-
       // 객체 내에서 가장 큰 값을 지닌 value값을 찾음
       for (let string in elementCount) {
         if (max < elementCount[string]) {
@@ -130,9 +128,11 @@ router.get("/", async (req, res, next) => {
           delete elementCount[string];
         }
       }
-      E_rank.push(maxString1, maxString2, maxString3);
 
-      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, elementRanking: E_rank };
+      elementRanking = { "1위": maxString1, "2위": maxString2, "3위": maxString3 };
+      // 예시) "todayMoodAvg": 60
+      // 예시) "elementRanking": { "1위": ["디저트", "시험"], "2위": ["친구"], "3위": [] }
+      result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, elementRanking };
     }
   } catch (error) {
     console.error(error);
@@ -142,5 +142,4 @@ router.get("/", async (req, res, next) => {
     else res.status(201).json(result);
   }
 });
-
 module.exports = router;

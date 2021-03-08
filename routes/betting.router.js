@@ -39,9 +39,9 @@ router.post("/", isBettedToday, async (req, res, next) => {
  */
 router.get("/", async (req, res, next) => {
   let result;
-  const monthRanking = [];
+  const monthRanking = {};
   const allRanking = [];
-  const myPoint = [];
+  const myPoint = {};
   const { nick } = req.user;
   try {
     const ranking = await User.findAll({
@@ -51,13 +51,16 @@ router.get("/", async (req, res, next) => {
     for (let i = 0; i < ranking.length; i++) {
       allRanking.push(ranking[i].dataValues);
       if (ranking[i].dataValues.nick === nick) {
-        myPoint.push({ rank: i + 1, point: ranking[i].dataValues.point });
+        myPoint["rank"] = i + 1;
+        myPoint["point"] = ranking[i].point;
       }
     }
     // TODO: 월간 랭킹 순위는 몇 위 까지 보여줄것 인지 정하기 (임시: 6명)
     for (let i = 0; i < 6; i++) {
-      monthRanking.push(allRanking[i]);
+      monthRanking[`${i + 1}위`] = allRanking[i];
     }
+    // 예시) "monthRanking": { "1위": {"nick": "oldman", "point": 60000}, "2위": {"nick": "hihi", "point": 30000}, ...}
+    // 예시) "myPoint": {"rank": 7, "point": 2000}
     result = { success: true, message: "월간 포인트 랭킹", monthRanking, myPoint };
   } catch (error) {
     console.error(error);

@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-module.exports = class Betting extends Sequelize.Model {
+module.exports = class Archive extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -11,6 +11,18 @@ module.exports = class Betting extends Sequelize.Model {
         date: {
           type: Sequelize.DATE,
           allowNull: false,
+        },
+        element_first: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+        element_second: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+        element_third: {
+          type: Sequelize.STRING,
+          allowNull: true,
         },
       },
       {

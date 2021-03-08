@@ -28,6 +28,7 @@ router.get("/", async (req, res, next) => {
     for (let i = 0; i < monthMood.length; i++) {
       archive[`${monthMood[i].date.getDate()}일`] = [monthMood[i].mood, [monthMood[i].element_first, monthMood[i].element_second, monthMood[i].element_third]];
     }
+    // 예시) "archive": { "1일": [24(온도), ["집밥","과제","시험"]], "2일": [34(온도), ["시험","업무",null]], ...}
     result = { success: true, message: "이번달 온도", archive };
   } catch (error) {
     console.error(error);
