@@ -7,14 +7,14 @@ const router = express.Router();
 /**
  * @description 주간, 월간
  * @route /archive
- * @TODO 어떤 형식으로 보내줄지 회의 후 결정
+ * @TODO 이렇게 하는것보다 params를 줘서 달력에 클릭했을 때 요소들 나오게하는게 더 좋았을 것 같다.
  */
 router.get("/", async (req, res, next) => {
   let result;
   const NOW = new Date();
   const Op = Sequelize.Op;
   const MONTH_START = new Date().setDate(0);
-  const archive = [];
+  const archive = {};
   try {
     const monthMood = await Archive.findAll({
       where: {
@@ -23,9 +23,10 @@ router.get("/", async (req, res, next) => {
           [Op.lt]: NOW,
         },
       },
+      order: [["date", "asc"]],
     });
     for (let i = 0; i < monthMood.length; i++) {
-      archive.push([monthMood[i].dataValues.date.toString(), monthMood[i].dataValues.mood]);
+      archive[`${monthMood[i].date.getDate()}일`] = [monthMood[i].mood, [monthMood[i].element_first, monthMood[i].element_second, monthMood[i].element_third]];
     }
     result = { success: true, message: "이번달 온도", archive };
   } catch (error) {
