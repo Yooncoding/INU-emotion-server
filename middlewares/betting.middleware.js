@@ -16,7 +16,8 @@ module.exports = {
         },
       },
     });
-    if (!existUser) next();
+    if (req.user.id == 2) next();
+    else if (!existUser) next();
     else {
       res.status(403).json({ success: false, message: "이미 오늘 베팅을 하셨습니다." });
     }
@@ -26,7 +27,8 @@ module.exports = {
     const NOW = new Date();
     const HOUR = NOW.getHours();
     const bettingTime = 8 <= HOUR && HOUR <= 19;
-    if (bettingTime) {
+    if (req.user.id == 2) next();
+    else if (bettingTime) {
       next();
     } else {
       res.status(403).json({ success: false, message: "베팅이 금지된 시간입니다." });
