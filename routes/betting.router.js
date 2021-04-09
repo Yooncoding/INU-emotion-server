@@ -13,7 +13,7 @@ router.use(isLoggIned);
  * @route POST /betting
  * @TODO test가 끝나고나서 isBettingTime(베팅가능 시간인지 확인해주는 미들웨어) 넣기
  */
-router.post("/", isBettedToday, async (req, res, next) => {
+router.post("/", isBettedToday, isBettingTime, async (req, res, next) => {
   const { bet_mood } = req.body;
   const { id } = req.user;
   let result;
