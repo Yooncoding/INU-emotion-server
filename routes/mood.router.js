@@ -13,7 +13,7 @@ router.use(isLoggIned);
  * @route POST /mood
  * @TODO test가 끝나고나서 isSubnitTime(제출가능 시간인지 확인해주는 미들웨어) 넣기
  */
-router.post("/", isSubmitedToday, async (req, res, next) => {
+router.post("/", isSubmitedToday, isSubmitTime, async (req, res, next) => {
   // req.body.element_first, second, third는 utils/elements.js에 있는 요소들이랑 이름을 맞춰 줘야함
   const { select_mood, element_first, element_second, element_third } = req.body;
   const { id } = req.user;
@@ -89,49 +89,55 @@ router.get("/", async (req, res, next) => {
         a[c] = (a[c] || 0) + 1;
         return a;
       }, {});
-      // 객체 내에서 가장 큰 값을 지닌 value값을 찾음
-      for (let string in elementCount) {
-        if (max < elementCount[string]) {
-          max = elementCount[string];
-        }
-      }
-      // 위에서 찾아낸 value값을 가지는 객체의 key값을 push해주면서 최대값을 가지는 객체의 원소 일부를 삭제
-      for (let string in elementCount) {
-        if (max === elementCount[string]) {
-          maxString1.push(string);
-          delete elementCount[string];
-        }
-      }
-      // 2번째 큰수
-      max = 0;
-      for (let string in elementCount) {
-        if (max < elementCount[string]) {
-          max = elementCount[string];
-        }
-      }
-      for (let string in elementCount) {
-        if (max === elementCount[string]) {
-          maxString2.push(string);
-          delete elementCount[string];
-        }
-      }
-      // 3번째 큰수
-      max = 0;
-      for (let string in elementCount) {
-        if (max < elementCount[string]) {
-          max = elementCount[string];
-        }
-      }
-      for (let string in elementCount) {
-        if (max === elementCount[string]) {
-          maxString3.push(string);
-          delete elementCount[string];
-        }
-      }
 
-      elementRanking = { "1위": maxString1, "2위": maxString2, "3위": maxString3 };
+      console.log(elementCount);
+      // // 객체 내에서 가장 큰 값을 지닌 value값을 찾음
+      // for (let string in elementCount) {
+      //   if (max < elementCount[string]) {
+      //     max = elementCount[string];
+      //   }
+      // }
+      // // 위에서 찾아낸 value값을 가지는 객체의 key값을 push해주면서 최대값을 가지는 객체의 원소 일부를 삭제
+      // for (let string in elementCount) {
+      //   if (max === elementCount[string]) {
+      //     maxString1.push(string);
+      //     delete elementCount[string];
+      //   }
+      // }
+      // // 2번째 큰수
+      // max = 0;
+      // for (let string in elementCount) {
+      //   if (max < elementCount[string]) {
+      //     max = elementCount[string];
+      //   }
+      // }
+      // for (let string in elementCount) {
+      //   if (max === elementCount[string]) {
+      //     maxString2.push(string);
+      //     delete elementCount[string];
+      //   }
+      // }
+      // // 3번째 큰수
+      // max = 0;
+      // for (let string in elementCount) {
+      //   if (max < elementCount[string]) {
+      //     max = elementCount[string];
+      //   }
+      // }
+      // for (let string in elementCount) {
+      //   if (max === elementCount[string]) {
+      //     maxString3.push(string);
+      //     delete elementCount[string];
+      //   }
+      // }
+
+      let elementRanking = [];
+      for (let number in elementCount) {
+        elementRanking.push(number);
+      }
+      elementRanking.sort((a, b) => b[1] - a[1]);
       // 예시) "todayMoodAvg": 60
-      // 예시) "elementRanking": { "1위": ["디저트", "시험"], "2위": ["친구"], "3위": [] }
+      // 예시) "elementRanking": [["디저트", "시험"], ["친구"], []]
       result = { success: true, message: `오늘의 온도: ${todayMoodAvg}`, todayMoodAvg, elementRanking };
     }
   } catch (error) {

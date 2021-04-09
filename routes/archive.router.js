@@ -14,7 +14,7 @@ router.get("/", async (req, res, next) => {
   const NOW = new Date();
   const Op = Sequelize.Op;
   const MONTH_START = new Date().setDate(0);
-  const archive = {};
+  const archive = [];
   try {
     const monthMood = await Archive.findAll({
       where: {
@@ -26,9 +26,9 @@ router.get("/", async (req, res, next) => {
       order: [["date", "asc"]],
     });
     for (let i = 0; i < monthMood.length; i++) {
-      archive[`${monthMood[i].date.getDate()}일`] = [monthMood[i].mood, [monthMood[i].element_first, monthMood[i].element_second, monthMood[i].element_third]];
+      archive.push([monthMood[i].mood, [monthMood[i].element_first, monthMood[i].element_second, monthMood[i].element_third]]);
     }
-    // 예시) "archive": { "1일": [24(온도), ["집밥","과제","시험"]], "2일": [34(온도), ["시험","업무",null]], ...}
+    // 예시) "archive": [[24(온도), ["집밥","과제","시험"]], [34(온도), ["시험","업무",null]], ...]
     result = { success: true, message: "이번달 온도", archive };
   } catch (error) {
     console.error(error);
